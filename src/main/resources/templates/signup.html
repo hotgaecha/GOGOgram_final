@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .signup-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .signup-container .form-group {
+            margin-bottom: 15px;
+        }
+        .signup-container .btn-primary {
+            width: 100%;
+        }
+        .signup-container .links {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 중앙에 정렬된 회원가입 폼 -->
+    <div class="signup-container">
+        <!-- 회원가입 제목 -->
+        <h2>회원가입</h2>
+        <!-- 회원가입 폼 시작 -->
+        <form>
+            <!-- 이메일 입력 필드 -->
+            <div class="form-group">
+                <label for="signupEmail">이메일</label>
+                <input type="email" class="form-control" id="signupEmail" placeholder="이메일">
+            </div>
+            <!-- 비밀번호 입력 필드 -->
+            <div class="form-group">
+                <label for="signupPassword">비밀번호</label>
+                <input type="password" class="form-control" id="signupPassword" placeholder="비밀번호">
+            </div>
+            <!-- 비밀번호 확인 입력 필드 -->
+            <div class="form-group">
+                <label for="confirmPassword">비밀번호 확인</label>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="비밀번호 확인">
+            </div>
+            <!-- 회원가입 버튼 -->
+            <button type="submit" class="btn btn-primary">회원가입</button>
+        </form>
+        <!-- 로그인 페이지로 이동하는 링크 -->
+        <div class="links">
+            <p>이미 계정이 있으신가요? <a href="login.html">로그인</a></p>
+        </div>
+    </div>
+</body>
+</html>

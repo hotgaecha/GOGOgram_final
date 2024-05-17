@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonogram Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .grid-container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 60%;
+        }
+        .grid {
+            display: grid;
+            gap: 2px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .grid div {
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+            position: relative;
+        }
+        .grid div.filled {
+            background-color: black;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .stopwatch, .submit-button {
+            font-size: 24px;
+            margin: 0 10px;
+        }
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .leaderboard {
+            width: 30%;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .leaderboard h2 {
+            text-align: center;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: none;
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <h1>Nonogram Game</h1>
+        <div id="nonogram-container" class="grid"></div>
+        <div class="controls">
+            <div class="stopwatch" id="stopwatch">00:00</div>
+            <button class="submit-button" onclick="submitAnswer()">Submit</button>
+        </div>
+    </div>
+    <div class="leaderboard">
+        <h2>Leaderboard</h2>
+        <ul id="leaderboard"></ul>
+    </div>
+    <div id="popup" class="popup">
+        <p id="popup-message"></p>
+        <button onclick="closePopup()">Close</button>
+        <button onclick="restartGame()">Restart</button>
+        <button onclick="goToMain()">Go to Main</button>
+    </div>
+
+    <script>
+        let timer;
+        let seconds = 0;
+        let running = false;
+        let size;
+        let userAnswer = [];
+        const number = /*[[${number}]]*/ 0;
+
+        function startGame() {
+            fetch(`/game/state?number=${number}`)
+                .then(response => response.json())
+                .then(data => {
+                    size = data.board.length;
+                    createGrid(data.board);
+                    startStopwatch();
+                });
+        }
+
+        function createGrid(board) {
+            const container = document.getElementById('nonogram-container');
+            container.innerHTML = '';
+            container.style.gridTemplateColumns = `repeat(${board.length}, 1fr)`;
+            container.style.gridTemplateRows = `repeat(${board.length}, 1fr)`;
+
+            userAnswer = new Array(board.length).fill(null).map(() => new Array(board.length).fill(false));
+
+            for (let row = 0; row < board.length; row++) {
+                for (let col = 0; col < board[row].length; col++) {
+                    const cell = document.createElement('div');
+                    cell.onclick = () => toggleCell(row, col);
+                    container.appendChild(cell);
+                }
+            }
+        }
+
+        function toggleCell(row, col) {
+            const cellIndex = row * size + col;
+            const cell = document.querySelector(`.grid div:nth-child(${cellIndex + 1})`);
+            cell.classList.toggle('filled');
+            userAnswer[row][col] = !userAnswer[row][col];
+        }
+
+        function startStopwatch() {
+            if (running) {
+                clearInterval(timer);
+                seconds = 0;
+                document.getElementById('stopwatch').innerText = '00:00';
+            }
+            running = true;
+            timer = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('stopwatch').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function submitAnswer() {
+            fetch(`/game/check?number=${number}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userAnswer)
+            })
+            .then(response => response.json())
+            .then(result => {
+                showPopup(result.correct ? "Correct! Your time: " + document.getElementById('stopwatch').innerText : "Incorrect, try again.");
+                if (result.correct) {
+                    updateLeaderboard();
+                }
+            });
+        }
+
+        function updateLeaderboard() {
+            fetch('/leaderboard')
+                .then(response => response.json())
+                .then(data => {
+                    const leaderboard = document.getElementById('leaderboard');
+                    leaderboard.innerHTML = '';
+                    data.forEach((entry, index) => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${index + 1}. ${entry.name} - ${entry.time}`;
+                        leaderboard.appendChild(listItem);
+                    });
+                });
+        }
+
+        function showPopup(message) {
+            document.getElementById('popup-message').innerText = message;
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function restartGame() {
+            closePopup();
+            startGame();
+        }
+
+        function goToMain() {
+            window.location.href = '/';
+        }
+
+        startGame();
+    </script>
+</body>
+</html>

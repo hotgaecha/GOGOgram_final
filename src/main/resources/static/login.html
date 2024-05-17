@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <!-- Bootstrap 4.0.0의 CSS 파일을 불러옴 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* 전체 페이지 중앙에 로그인 폼을 배치 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        /* 로그인 폼의 스타일 설정 */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        /* 로그인 제목을 중앙 정렬 */
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* 폼 그룹 간의 간격 설정 */
+        .login-container .form-group {
+            margin-bottom: 15px;
+        }
+        /* 로그인 버튼의 너비를 100%로 설정 */
+        .login-container .btn-primary {
+            width: 100%;
+        }
+        /* Google 로그인 버튼의 너비를 100%로 설정 */
+        .login-container .btn-secondary {
+            width: 100%;
+            margin-top: 10px;
+        }
+        /* 로그인 상태 유지 체크박스의 중앙 정렬 */
+        .login-container .form-check {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        /* 추가 링크를 중앙 정렬 */
+        .login-container .links {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 중앙에 정렬된 로그인 폼 -->
+    <div class="login-container">
+        <!-- 로그인 제목 -->
+        <h2>로그인</h2>
+        <!-- 로그인 폼 시작 -->
+        <form>
+            <!-- 아이디 / 이메일 입력 필드 -->
+            <div class="form-group">
+                <label for="email">아이디 / 이메일</label>
+                <input type="email" class="form-control" id="email" placeholder="아이디 / 이메일">
+            </div>
+            <!-- 비밀번호 입력 필드 -->
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" class="form-control" id="password" placeholder="비밀번호">
+            </div>
+            <!-- 로그인 상태 유지 체크박스 -->
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">로그인 상태 유지</label>
+            </div>
+            <!-- 로그인 버튼 -->
+            <button type="submit" class="btn btn-primary">로그인</button>
+        </form>
+        <!-- Google로 로그인 버튼 -->
+        <a class="btn btn-secondary" href="/oauth2/authorization/google">Google로 로그인</a>
+        <!-- 추가 링크들 -->
+        <div class="links">
+            <p>아이디나 비밀번호를 잊었을 때는, <a href="forgot-password.html">여기</a>를 눌러주세요.</p>
+            <p>회원 가입은 <a href="signup.html">여기</a>에서 할 수 있습니다.</p>
+        </div>
+    </div>
+</body>
+</html>
