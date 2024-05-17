@@ -33,18 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
             .logout()
-            .permitAll()
-            .and()
-            .oauth2Login()
-            .clientRegistrationRepository(clientRegistrationRepository())
-            .authorizedClientService(authorizedClientService());
+            .permitAll();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // Define your ClientRegistrationRepository and OAuth2AuthorizedClientService beans
-    // using the values from the GoogleOAuthConfig
 }
