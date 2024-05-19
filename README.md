@@ -1,5 +1,4 @@
-# GOGOgram
-# GOGOgram_final
-# GOGOgram_final
-# GOGOgram_final
-# GOGOgram_final
+mvn spring-boot:run    
+
+실행
+
